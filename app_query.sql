@@ -5,10 +5,10 @@
 DROP TABLE IF EXISTS branch ;
 CREATE TABLE branch (
 
-    branch_id VARCHAR (10) PRIMARY KEY,
+        branch_id VARCHAR (10) PRIMARY KEY,
 	manager_id	VARCHAR (10),
-    branch_address	VARCHAR (55),
-    contact_no VARCHAR (10)
+        branch_address	VARCHAR (55),
+        contact_no VARCHAR (10)
     
 );
 
@@ -17,11 +17,12 @@ CREATE TABLE branch (
 DROP TABLE IF EXISTS employees ;
 CREATE TABLE employees (
 
-    emp_id	VARCHAR (10) PRIMARY KEY ,
+        emp_id VARCHAR (10) PRIMARY KEY ,
 	emp_name VARCHAR (25),
 	position VARCHAR (15),
 	salary	INT,
-    branch_id VARCHAR (25)
+        branch_id VARCHAR (25),
+	FOREIGN KEY (branch_id) REFERENCES  branch(branch_id)
 
 );
 
@@ -35,7 +36,7 @@ CREATE TABLE books (
 	category VARCHAR (30),
 	rental_price DECIMAL (10, 2),
 	status	VARCHAR (10),
-    author VARCHAR (30),
+        author VARCHAR (30),
 	publisher VARCHAR (30)
 
 );
