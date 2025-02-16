@@ -1,4 +1,4 @@
--- LIBRARY_MANAGEMENT_PROJECT_P2 
+-- LIBRARY_PROJECT 
 
 -- creating branch table 
 
@@ -17,12 +17,11 @@ CREATE TABLE branch (
 DROP TABLE IF EXISTS employees ;
 CREATE TABLE employees (
 
-        emp_id VARCHAR (10) PRIMARY KEY ,
+        emp_id	VARCHAR (10) PRIMARY KEY ,
 	emp_name VARCHAR (25),
 	position VARCHAR (15),
 	salary	INT,
-        branch_id VARCHAR (25),
-	FOREIGN KEY (branch_id) REFERENCES  branch(branch_id)
+        branch_id VARCHAR (25)
 
 );
 
@@ -63,10 +62,8 @@ CREATE TABLE issued_status
             issued_book_name VARCHAR(80),
             issued_date DATE,
             issued_book_isbn VARCHAR(50),
-            issued_emp_id VARCHAR(10),
-            FOREIGN KEY (issued_member_id) REFERENCES members(member_id),
-            FOREIGN KEY (issued_emp_id) REFERENCES employees(emp_id),
-            FOREIGN KEY (issued_book_isbn) REFERENCES books(isbn) 
+            issued_emp_id VARCHAR(10)
+            
 );
 
 -- creating return status table 
@@ -78,9 +75,55 @@ CREATE TABLE return_status
             issued_id VARCHAR(30),
             return_book_name VARCHAR(80),
             return_date DATE,
-            return_book_isbn VARCHAR(50),
-            FOREIGN KEY (return_book_isbn) REFERENCES books(isbn)
+            return_book_isbn VARCHAR(50)
+            
 );
+
+-- FOREIGN KEY 
+
+ALTER TABLE issued_status
+ADD CONSTRAINT fk_members
+FOREIGN KEY (issued_member_id)
+REFERENCES members(member_id);
+
+ALTER TABLE issued_status
+ADD CONSTRAINT fk_members
+FOREIGN KEY (issued_member_id)
+REFERENCES members(member_id);
+
+ALTER TABLE issued_status
+ADD CONSTRAINT fk_books
+FOREIGN KEY (issued_book_isbn)
+REFERENCES books(isbn);
+
+ALTER TABLE issued_status
+ADD CONSTRAINT fk_employees
+FOREIGN KEY (issued_emp_id)
+REFERENCES employees(emp_id);
+
+ALTER TABLE employees
+ADD CONSTRAINT fk_branch
+FOREIGN KEY (branch_id)
+REFERENCES branch(branch_id);
+
+ALTER TABLE return_status
+ADD CONSTRAINT fk_issued_status
+FOREIGN KEY (issued_id)
+REFERENCES issued_status(issued_id);
+
+SELECT issued_id
+FROM return_status
+WHERE issued_id NOT IN (SELECT issued_id FROM issued_status);
+
+DELETE FROM return_status
+WHERE issued_id NOT IN (SELECT issued_id FROM issued_status);
+
+ALTER TABLE return_status
+ADD CONSTRAINT fk_issued_status
+FOREIGN KEY (issued_id)
+REFERENCES issued_status(issued_id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
 
 
 -- Project TASK
