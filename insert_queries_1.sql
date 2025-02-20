@@ -147,3 +147,14 @@ VALUES
 ('RS118', 'IS120', '2024-05-29');
 SELECT * FROM issued_status;
 
+
+-- Adding new column in return_status
+
+ALTER TABLE return_status
+ADD Column book_quality VARCHAR(15) DEFAULT('Good');
+
+UPDATE return_status
+SET book_quality = 'Damaged'
+WHERE issued_id 
+    IN ('IS112', 'IS117', 'IS118');
+SELECT * FROM return_status;
