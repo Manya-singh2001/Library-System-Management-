@@ -158,3 +158,88 @@ GROUP BY 1
 HAVING COUNT(*) > 1
 ```
 
+
+### 3. CTAS (Create Table As Select)
+
+- **Task 6: Create Summary Tables**: Used CTAS to generate new tables based on query results - each book and total book_issued_cnt**
+
+```sql
+CREATE TABLE book_counts
+AS
+SELECT 
+b.isbn,
+b.book_title ,
+COUNT(ist.issued_id) AS no_issued
+FROM books as b 
+JOIN 
+issued_status as ist 
+ON ist.issued_book_isbn = b.isbn
+GROUP BY 1,2 ;
+
+SELECT * FROM book_counts ;
+```
+
+### 4. Data Analysis & Findings
+
+The following SQL queries were used to address specific questions:
+
+Task 7. **Retrieve All Books in a Specific Category**:
+
+```sql
+SELECT * FROM books 
+WHERE category = 'fiction' ;
+```
+
+8. **Task 8: Find Total Rental Income by Category**:
+
+```sql
+SELECT 
+b.category,
+SUM(b.rental_price),
+COUNT(*)
+FROM books as b 
+JOIN 
+issued_status as ist 
+ON ist.issued_book_isbn = b.isbn
+GROUP BY 1 ;
+```
+
+9. **List Members Who Registered in the Last 180 Days**:
+```sql
+SELECT * 
+FROM members 
+WHERE reg_date >= DATE_SUB(CURRENT_DATE, INTERVAL 180 DAY);
+```
+
+10. **List Employees with Their Branch Manager's Name and their branch details**:
+
+```sql
+SELECT 
+    e1.*,
+    b.manager_id,
+    e2.emp_name as manager
+FROM employees as e1
+JOIN  
+branch as b
+ON b.branch_id = e1.branch_id
+JOIN
+employees as e2
+ON b.manager_id = e2.emp_id
+```
+Task 11. **Create a Table of Books with Rental Price Above a Certain Threshold**:
+```sql
+CREATE TABLE expensive_books AS
+SELECT * FROM books
+WHERE rental_price > 7.00;
+```
+
+Task 12: **Retrieve the List of Books Not Yet Returned**
+```sql
+SELECT * FROM issued_status as ist
+LEFT JOIN
+return_status as rs
+ON rs.issued_id = ist.issued_id
+WHERE rs.return_id IS NULL
+
+SELECT * FROM return_status;
+```
