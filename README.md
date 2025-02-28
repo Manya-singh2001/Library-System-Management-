@@ -344,7 +344,6 @@ SELECT * FROM books WHERE isbn = '978-0-307-58837-1';
 
 ```
 
-/*
-Task 15: Branch Performance Report
+**Task 15: Branch Performance Report**
 Create a query that generates a performance report for each branch, showing the number of books issued, the number of books returned, and the total revenue generated from book rentals.
-*/
+
