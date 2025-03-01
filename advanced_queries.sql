@@ -119,4 +119,44 @@ Task 15: Branch Performance Report
 Create a query that generates a performance report for each branch, showing the number of books issued, the number of books returned, and the total revenue generated from book rentals.
 */
 
+SELECT * FROM branch;
+
+SELECT * FROM issued_status;
+
+SELECT * FROM employees;
+
+SELECT * FROM books;
+
+SELECT * FROM return_status;
+
+CREATE TABLE branch_reports
+AS
+SELECT 
+    b.branch_id,
+    b.manager_id,
+    COUNT(ist.issued_id) as number_book_issued,
+    COUNT(rs.return_id) as number_of_book_return,
+    SUM(bk.rental_price) as total_revenue
+FROM issued_status as ist
+JOIN 
+employees as e
+ON e.emp_id = ist.issued_emp_id
+JOIN
+branch as b
+ON e.branch_id = b.branch_id
+LEFT JOIN
+return_status as rs
+ON rs.issued_id = ist.issued_id
+JOIN 
+books as bk
+ON ist.issued_book_isbn = bk.isbn
+GROUP BY 1, 2;
+
+SELECT * FROM branch_reports;
+
+
+-- Task 16: CTAS: Create a Table of Active Members
+-- Use the CREATE TABLE AS (CTAS) statement to create a new table active_members containing members who have issued at least one book in the last 2 months.
+
+
 
