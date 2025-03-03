@@ -176,4 +176,19 @@ SELECT * FROM active_members;
 -- Task 17: Find Employees with the Most Book Issues Processed
 -- Write a query to find the top 3 employees who have processed the most book issues. Display the employee name, number of books processed, and their branch.
 
+SELECT 
+    e.emp_name,
+    b.*,
+    COUNT(ist.issued_id) AS no_book_issued
+FROM issued_status AS ist 
+JOIN employees AS e 
+    ON e.emp_id = ist.issued_emp_id 
+JOIN branch AS b 
+    ON e.branch_id = b.branch_id 
+GROUP BY e.emp_name, b.branch_id;  -- Adjust grouping based on your requirements
 
+
+-- Task 19: Stored Procedure Objective: Create a stored procedure to manage the status of books in a library system. Description: Write a stored procedure that updates the status of a book in the library based on its issuance.
+-- The procedure should function as follows: The stored procedure should take the book_id as an input parameter. 
+-- The procedure should first check if the book is available (status = 'yes'). If the book is available, it should be issued, and the status in the books table should be updated to 'no'. 
+-- If the book is not available (status = 'no'), the procedure should return an error message indicating that the book is currently not available.
