@@ -192,3 +192,56 @@ GROUP BY e.emp_name, b.branch_id;  -- Adjust grouping based on your requirements
 -- The procedure should function as follows: The stored procedure should take the book_id as an input parameter. 
 -- The procedure should first check if the book is available (status = 'yes'). If the book is available, it should be issued, and the status in the books table should be updated to 'no'. 
 -- If the book is not available (status = 'no'), the procedure should return an error message indicating that the book is currently not available.
+
+
+DELIMITER $$
+
+CREATE PROCEDURE issue_book(
+    IN p_issued_id VARCHAR(10), 
+    IN p_issued_member_id VARCHAR(30), 
+    IN p_issued_book_isbn VARCHAR(30), 
+    IN p_issued_emp_id VARCHAR(10)
+)
+BEGIN
+    DECLARE v_status VARCHAR(10);
+
+    -- Check if book is available
+    SELECT status INTO v_status 
+    FROM books 
+    WHERE isbn = p_issued_book_isbn;
+
+    IF v_status = 'yes' THEN
+        -- Insert issue record
+        INSERT INTO issued_status (issued_id, issued_member_id, issued_date, issued_book_isbn, issued_emp_id)
+        VALUES (p_issued_id, p_issued_member_id, CURDATE(), p_issued_book_isbn, p_issued_emp_id);
+
+        -- Update book status to 'no'
+        UPDATE books 
+        SET status = 'no' 
+        WHERE isbn = p_issued_book_isbn;
+
+        -- Display success message
+        SELECT 'Book records added successfully' AS message;
+    
+    ELSE
+        -- Display failure message
+        SELECT 'Sorry, the book you requested is unavailable' AS message;
+    END IF;
+END $$
+
+DELIMITER ;
+
+-- Check available books
+SELECT * FROM books;
+
+-- Call procedure for available and unavailable books
+CALL issue_book('IS155', 'C108', '978-0-553-29698-2', 'E104');
+CALL issue_book('IS156', 'C108', '978-0-375-41398-8', 'E104');
+
+-- Verify issued records
+SELECT * FROM issued_status;
+
+-- Verify book status update
+SELECT * FROM books WHERE isbn = '978-0-375-41398-8';
+
+
